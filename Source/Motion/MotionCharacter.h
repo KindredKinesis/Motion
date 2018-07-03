@@ -138,5 +138,30 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+protected:
+	//Called when we press a key to have the character sprint
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+		void CharacterSprint();
+
+	//Called when we release a key to have the character stop sprinting
+	UFUNCTION(BlueprintCallable, Category = "Stats")
+		void StopCharacterSprint();
+
+	//Whether or not the character is sprinting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		bool IsSprinting;
+
+	//The increase of speed when sprinting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		float SpeedFactor;
+
+	//The altered speed variable when sprinting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		float MaxWalkSpeed;
+
+	//The original speed variable when not sprinting
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		float BaseSpeed;
+
 };
 

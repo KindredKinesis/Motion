@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -82,6 +83,11 @@ AMotionCharacter::AMotionCharacter()
 
 	// Uncomment the following line to turn motion controllers on by default:
 	//bUsingMotionControllers = true;
+
+	//Initialize speed variables
+	SpeedFactor = 2.00f;
+	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	IsSprinting = false;
 }
 
 void AMotionCharacter::BeginPlay()
@@ -119,6 +125,10 @@ void AMotionCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerIn
 
 	// Bind fire event
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMotionCharacter::OnFire);
+
+	// Bind sprint events
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AMotionCharacter::CharacterSprint);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AMotionCharacter::StopCharacterSprint);
 
 	// Enable touchscreen input
 	EnableTouchscreenMovement(PlayerInputComponent);
@@ -184,6 +194,18 @@ void AMotionCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
 	}
+}
+
+void AMotionCharacter::CharacterSprint() {
+	//Change the speed so the character sprints
+	GetCharacterMovement()->MaxWalkSpeed *= SpeedFactor;
+	IsSprinting = true;
+}
+
+void AMotionCharacter::StopCharacterSprint() {
+	//Change the speed so the character STOPS sprinting
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+	IsSprinting = false;
 }
 
 void AMotionCharacter::OnResetVR()
