@@ -1,6 +1,7 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "MotionCharacter.h"
+#include "Motion.h"
 #include "MotionProjectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
@@ -175,6 +176,23 @@ void AMotionCharacter::OnFire()
 				// spawn the projectile at the muzzle
 				World->SpawnActor<AMotionProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 			}
+
+			/*FHitResult* HitResult = new FHitResult();
+			FVector StartTrace = FirstPersonCameraComponent->GetComponentLocation();
+			FVector ForwardVector = FirstPersonCameraComponent->GetForwardVector();
+			FVector EndTrace = ((ForwardVector * 2000.f) + StartTrace);
+			FCollisionQueryParams* TraceParams = new FCollisionQueryParams();
+
+			if (GetWorld()->LineTraceSingleByChannel(*HitResult, StartTrace, EndTrace, ECC_Visibility, *TraceParams))
+			{
+				DrawDebugLine(GetWorld(), StartTrace, EndTrace, FColor::Blue, false, 5.f);
+				AActor* OtherActor = Cast<AActor>(HitResult->Actor.Get());
+				
+				if((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
+				{
+					OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+				}
+			}*/
 		}
 	}
 
